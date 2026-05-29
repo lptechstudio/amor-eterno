@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para você, meu amor 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg1: #1a0a10;
+    --bg2: #3a0f1f;
+    --accent: #c0394b;
+    --gold: #c9a84c;
+    --blush: #f2c4ce;
+    --text: #fff;
+    --text-muted: rgba(255,255,255,0.6);
+  }
+
+  /* TEMAS */
+  body.theme-rose   { --bg1:#1a0a10; --bg2:#3a0f1f; --accent:#c0394b; --gold:#c9a84c; --blush:#f2c4ce; }
+  body.theme-sakura { --bg1:#1a0a18; --bg2:#3d1a3a; --accent:#e87bb0; --gold:#d4a0c0; --blush:#f5d0e0; }
+  body.theme-stars  { --bg1:#050518; --bg2:#0a0a30; --accent:#7060e0; --gold:#a090f0; --blush:#c0b8f8; }
+  body.theme-sunset { --bg1:#1a0800; --bg2:#3a1800; --accent:#e87030; --gold:#e8a030; --blush:#f8d0a0; }
+  body.theme-ocean  { --bg1:#020d18; --bg2:#0a2240; --accent:#1a8aaa; --gold:#30c0d0; --blush:#a0e0f0; }
+  body.theme-forest { --bg1:#040d04; --bg2:#0a220a; --accent:#2a8a2a; --gold:#60b040; --blush:#a0e090; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg1);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* PARTICLES */
+  #particles {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    font-size: 1rem;
+    opacity: 0;
+    animation: floatUp linear infinite;
+    user-select: none;
+  }
+  @keyframes floatUp {
+    0%   { opacity:0; transform: translateY(100vh) scale(0.5) rotate(0deg); }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.3; }
+    100% { opacity:0; transform: translateY(-10vh) scale(1.2) rotate(360deg); }
+  }
+
+  /* INTRO SCREEN */
+  #intro {
+    position: fixed;
+    inset: 0;
+    background: var(--bg1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 1s, transform 1s;
+  }
+  #intro.hide {
+    opacity: 0;
+    transform: scale(1.1);
+    pointer-events: none;
+  }
+  .envelope {
+    font-size: 5rem;
+    animation: pulse 2s ease-in-out infinite;
+    cursor: pointer;
+    filter: drop-shadow(0 0 30px var(--accent));
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+  .intro-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--blush);
+    margin-top: 1.5rem;
+    text-align: center;
+    padding: 0 2rem;
+    font-style: italic;
+    opacity: 0.85;
+  }
+  .intro-sub {
+    margin-top: 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity:0.4; }
+    50% { opacity:1; }
+  }
+
+  /* MAIN CONTENT */
+  #main {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 1.5s;
+    padding-bottom: 4rem;
+  }
+  #main.show { opacity: 1; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 0%, rgba(192,57,75,0.35) 0%, transparent 65%);
+  }
+  .hero::after {
+    content:'';
+    position:absolute;
+    bottom:0; left:0; right:0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, var(--bg1));
+  }
+
+  .para-voce {
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    animation: fadeDown 1s ease 0.3s both;
+  }
+  @keyframes fadeDown {
+    from { opacity:0; transform:translateY(-20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 12vw, 6rem);
+    font-style: italic;
+    color: var(--blush);
+    line-height: 1.1;
+    animation: fadeDown 1s ease 0.5s both;
+    text-shadow: 0 0 60px rgba(192,57,75,0.5);
+  }
+
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    animation: fadeDown 1s ease 0.7s both;
+  }
+  .hero-divider span { color: var(--accent); font-size: 1.4rem; }
+  .hero-divider::before, .hero-divider::after {
+    content:'';
+    width: 60px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent));
+  }
+  .hero-divider::after { transform: rotate(180deg); }
+
+  .hero-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    animation: fadeDown 1s ease 0.9s both;
+  }
+
+  /* PHOTO GALLERY */
+  .gallery {
+    padding: 3rem 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .gallery-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    color: var(--blush);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.8s, transform 0.8s;
+    transform: translateY(30px);
+  }
+  .gallery-title.visible { opacity:1; transform:translateY(0); }
+
+  .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .photos-grid.count-1 { grid-template-columns: 1fr; }
+  .photos-grid.count-3 .photo-item:first-child { grid-column: span 2; }
+
+  .photo-item {
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.8s, transform 0.8s;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .photo-item.visible { opacity:1; transform:scale(1); }
+  .photo-item img { width:100%; height:100%; object-fit:cover; display:block; }
+  .photo-item:nth-child(2) { transition-delay: 0.1s; }
+  .photo-item:nth-child(3) { transition-delay: 0.2s; }
+  .photo-item:nth-child(4) { transition-delay: 0.3s; }
+  .photo-item:nth-child(5) { transition-delay: 0.4s; }
+  .photo-item:nth-child(6) { transition-delay: 0.5s; }
+
+  /* MESSAGE */
+  .message-section {
+    padding: 3rem 1.5rem;
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: var(--accent);
+    line-height: 0.5;
+    opacity: 0.4;
+    margin-bottom: 1rem;
+    display: block;
+    opacity: 0;
+    transition: opacity 1s;
+  }
+  .quote-mark.visible { opacity: 0.4; }
+
+  .message-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 4vw, 1.4rem);
+    font-style: italic;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.9);
+    white-space: pre-line;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s 0.2s, transform 1s 0.2s;
+  }
+  .message-text.visible { opacity:1; transform:translateY(0); }
+
+  .message-assinatura {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    opacity: 0;
+    transition: opacity 1s 0.5s;
+  }
+  .message-assinatura.visible { opacity:1; }
+
+  /* MUSIC PLAYER */
+  .music-section {
+    padding: 2rem 1.5rem;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .music-player {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s, transform 0.8s;
+  }
+  .music-player.visible { opacity:1; transform:translateY(0); }
+  .music-disc {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #444 30%, var(--accent) 31%, var(--accent) 40%, #333 41%);
+    flex-shrink: 0;
+    animation: spin 4s linear infinite paused;
+  }
+  .music-disc.playing { animation-play-state: running; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .music-info { flex:1; min-width:0; }
+  .music-name { font-weight:500; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .music-artist { font-size:0.8rem; color:var(--text-muted); }
+  .play-btn {
+    width:44px; height:44px;
+    border-radius:50%;
+    background: var(--accent);
+    border:none;
+    color:#fff;
+    font-size:1.1rem;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .play-btn:hover { transform:scale(1.1); background: var(--gold); }
+
+  /* YOUTUBE EMBED (oculto) */
+  #yt-frame { display:none; }
+
+  /* COUNTDOWN */
+  .countdown-section {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .countdown-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--blush);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.8s;
+  }
+  .countdown-title.visible { opacity:1; }
+  .countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s 0.2s, transform 0.8s 0.2s;
+  }
+  .countdown-grid.visible { opacity:1; transform:translateY(0); }
+  .count-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 1rem 0.5rem;
+  }
+  .count-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--blush);
+    line-height: 1;
+  }
+  .count-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 3rem 1.5rem 4rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  footer .heart { color: var(--accent); font-size: 1.2rem; animation: pulse 2s infinite; }
+  footer p { margin-top: 0.5rem; letter-spacing: 1px; }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s, transform 0.8s;
+  }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body class="theme-rose" id="pagebody">
+
+<!-- PARTICLES -->
+<div id="particles"></div>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="envelope" onclick="abrirCarta()">💌</div>
+  <div class="intro-text" id="intro-nome-text">Você tem uma mensagem especial</div>
+  <div class="intro-sub">toque para abrir</div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="para-voce">— com todo meu amor, para —</div>
+    <div class="hero-name" id="hero-name">Meu amor</div>
+    <div class="hero-divider"><span>♥</span></div>
+    <div class="hero-date" id="hero-date"></div>
+  </section>
+
+  <!-- FOTOS -->
+  <section class="gallery" id="gallery-section">
+    <div class="gallery-title reveal">Nossos momentos 📸</div>
+    <div class="photos-grid" id="photos-grid"></div>
+  </section>
+
+  <!-- MENSAGEM -->
+  <section class="message-section" id="msg-section">
+    <span class="quote-mark">"</span>
+    <div class="message-text" id="msg-text">Carregando...</div>
+    <div class="message-assinatura" id="msg-assinatura">— com todo meu amor ❤️</div>
+  </section>
+
+  <!-- MÚSICA -->
+  <section class="music-section" id="music-section" style="display:none">
+    <div class="music-player" id="music-player">
+      <div class="music-disc" id="music-disc"></div>
+      <div class="music-info">
+        <div class="music-name" id="music-name-el">Música especial</div>
+        <div class="music-artist" id="music-artist-el">Para você</div>
+      </div>
+      <button class="play-btn" id="play-btn" onclick="togglePlay()">▶</button>
+    </div>
+    <iframe id="yt-frame" width="0" height="0" frameborder="0" allow="autoplay"></iframe>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section class="countdown-section" id="count-section" style="display:none">
+    <div class="countdown-title reveal">Juntos há...</div>
+    <div class="countdown-grid reveal" id="count-grid">
+      <div class="count-box"><div class="count-num" id="c-anos">0</div><div class="count-label">Anos</div></div>
+      <div class="count-box"><div class="count-num" id="c-meses">0</div><div class="count-label">Meses</div></div>
+      <div class="count-box"><div class="count-num" id="c-dias">0</div><div class="count-label">Dias</div></div>
+      <div class="count-box"><div class="count-num" id="c-horas">0</div><div class="count-label">Horas</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="heart">♥</div>
+    <p>Feito com amor • Amor Eterno</p>
+  </footer>
+
+</div>
+
+<script>
+// ─── CARREGAR DADOS ───────────────────────────────────────────────
+// Em produção, estes dados vêm do Supabase via parâmetro da URL.
+// Por enquanto usamos dados de exemplo ou URL params.
+function getParams() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    nome:       p.get('nome')       || 'Meu amor',
+    tema:       p.get('tema')       || 'rose',
+    mensagem:   p.get('msg')        || 'Você é o motivo pelo qual eu sorrio todos os dias.\n\nCom você aprendi que o amor pode ser ainda mais lindo do que eu imaginava.',
+    musicaNome: p.get('musica')     || '',
+    musicaArtista: p.get('artista') || '',
+    musicaUrl:  p.get('url')        || '',
+    dataInicio: p.get('data')       || '',
+    fotos:      p.get('fotos')      ? p.get('fotos').split('|') : []
+  };
+}
+
+const data = getParams();
+
+// ─── TEMA ────────────────────────────────────────────────────────
+document.getElementById('pagebody').className = 'theme-' + data.tema;
+
+// ─── INTRO ───────────────────────────────────────────────────────
+document.getElementById('intro-nome-text').textContent =
+  data.nome !== 'Meu amor' ? `Isso é para você, ${data.nome} 💕` : 'Você tem uma mensagem especial';
+
+// ─── PARTÍCULAS ──────────────────────────────────────────────────
+const emojis = ['♥','❤','💕','🌹','✨','💫','🌸','💗'];
+const pc = document.getElementById('particles');
+for(let i=0;i<25;i++) {
+  const el = document.createElement('div');
+  el.className = 'particle';
+  el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  el.style.left = Math.random()*100 + 'vw';
+  el.style.animationDuration = (8+Math.random()*12)+'s';
+  el.style.animationDelay = (-Math.random()*20)+'s';
+  el.style.fontSize = (0.6+Math.random()*1.2)+'rem';
+  pc.appendChild(el);
+}
+
+// ─── ABRIR CARTA ─────────────────────────────────────────────────
+let opened = false;
+function abrirCarta() {
+  if(opened) return;
+  opened = true;
+  document.getElementById('intro').classList.add('hide');
+  setTimeout(()=>{
+    document.getElementById('intro').style.display='none';
+    document.getElementById('main').classList.add('show');
+    initContent();
+  }, 1000);
+}
+
+// ─── CONTEÚDO ────────────────────────────────────────────────────
+function initContent() {
+  // nome
+  document.getElementById('hero-name').textContent = data.nome;
+
+  // data especial → countdown
+  if(data.dataInicio) {
+    document.getElementById('count-section').style.display = 'block';
+    updateCountdown(data.dataInicio);
+    setInterval(()=>updateCountdown(data.dataInicio), 60000);
+    document.getElementById('hero-date').textContent = 'Desde ' + data.dataInicio;
+  }
+
+  // fotos
+  const grid = document.getElementById('photos-grid');
+  if(data.fotos && data.fotos.length > 0) {
+    grid.className = 'photos-grid count-' + data.fotos.length;
+    data.fotos.forEach(src=>{
+      const item = document.createElement('div');
+      item.className='photo-item';
+      item.innerHTML=`<img src="${src}" alt="foto">`;
+      grid.appendChild(item);
+    });
+  } else {
+    document.getElementById('gallery-section').style.display='none';
+  }
+
+  // mensagem
+  document.getElementById('msg-text').textContent = data.mensagem;
+
+  // música
+  if(data.musicaNome) {
+    document.getElementById('music-section').style.display='block';
+    document.getElementById('music-name-el').textContent = data.musicaNome;
+    document.getElementById('music-artist-el').textContent = data.musicaArtista;
+    if(data.musicaUrl) {
+      const ytId = extractYTId(data.musicaUrl);
+      if(ytId) document.getElementById('yt-frame').src =
+        `https://www.youtube.com/embed/${ytId}?enablejsapi=1&autoplay=0`;
+    }
+  }
+
+  // scroll reveal
+  setTimeout(initReveal, 300);
+}
+
+// ─── YOUTUBE ─────────────────────────────────────────────────────
+function extractYTId(url) {
+  const m = url.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+let playing = false;
+function togglePlay() {
+  const frame = document.getElementById('yt-frame');
+  const disc  = document.getElementById('music-disc');
+  const btn   = document.getElementById('play-btn');
+  playing = !playing;
+  if(playing) {
+    frame.style.display='block';
+    disc.classList.add('playing');
+    btn.textContent = '⏸';
+    frame.contentWindow?.postMessage('{"event":"command","func":"playVideo","args":""}','*');
+  } else {
+    disc.classList.remove('playing');
+    btn.textContent = '▶';
+    frame.contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}','*');
+  }
+}
+
+// ─── COUNTDOWN ───────────────────────────────────────────────────
+function updateCountdown(dateStr) {
+  const parts = dateStr.split('/');
+  if(parts.length < 3) return;
+  const start = new Date(parts[2], parts[1]-1, parts[0]);
+  const now = new Date();
+  const diff = now - start;
+  if(diff < 0) return;
+
+  const anos  = Math.floor(diff / (365.25*24*3600*1000));
+  const meses = Math.floor((diff % (365.25*24*3600*1000)) / (30.44*24*3600*1000));
+  const dias  = Math.floor((diff % (30.44*24*3600*1000)) / (24*3600*1000));
+  const horas = Math.floor((diff % (24*3600*1000)) / (3600*1000));
+
+  document.getElementById('c-anos').textContent  = anos;
+  document.getElementById('c-meses').textContent = meses;
+  document.getElementById('c-dias').textContent  = dias;
+  document.getElementById('c-horas').textContent = horas;
+}
+
+// ─── SCROLL REVEAL ───────────────────────────────────────────────
+function initReveal() {
+  const els = document.querySelectorAll('.reveal, .gallery-title, .photo-item, .message-text, .music-player, .quote-mark, .message-assinatura, .countdown-title, .countdown-grid');
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add('visible');
+    });
+  },{threshold:0.15});
+  els.forEach(el=>obs.observe(el));
+}
+</script>
+</body>
+</html>
