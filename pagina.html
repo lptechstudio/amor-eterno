@@ -2,573 +2,664 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Para você 💕</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --rose:#e91e8c;--rose-light:#fce4f3;
-  --gold:#f59e0b;--dark:#0d0508;
-  --bg:#fff;--text:#1a1a2e;--muted:#9ca3af;--border:#f3f4f6;
+  --pink:#e91e8c;--pink2:#f472b6;--purple:#8b5cf6;--purple2:#a78bfa;
+  --bg:#fff0f6;--card:#fff;--text:#2d1a2e;--muted:#9ca3af;
+  --grad:linear-gradient(135deg,var(--pink),var(--purple));
 }
-body{font-family:'Nunito',sans-serif;background:var(--dark);color:#fff;min-height:100vh;overflow-x:hidden}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* TEMAS */
-body.theme-sakura{--rose:#e87bb0;--rose-light:#fce4f0}
-body.theme-stars{--rose:#8b5cf6;--rose-light:#ede9fe}
-body.theme-sunset{--rose:#f97316;--rose-light:#ffedd5}
-body.theme-ocean{--rose:#06b6d4;--rose-light:#e0f7fa}
-body.theme-purple{--rose:#8b5cf6;--rose-light:#ede9fe}
-
-/* ─── TELA DE SENHA ─── */
+/* ───── TELA DE SENHA ───── */
 #lockScreen{
-  position:fixed;inset:0;
-  background:linear-gradient(135deg,#0d0508,#1a0a14);
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(160deg,#1a0d2e 0%,#2d0a1f 50%,#0d0a1a 100%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:1000;padding:2rem;
+  padding:2rem;
 }
-.lock-icon{font-size:3.5rem;margin-bottom:1rem;animation:bounce 2s infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.lock-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-style:italic;margin-bottom:0.4rem;text-align:center}
-.lock-sub{font-size:0.82rem;color:rgba(255,255,255,0.4);margin-bottom:2rem;text-align:center}
+.lock-hearts{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.lock-heart{position:absolute;font-size:1.2rem;opacity:0;animation:floatHeart linear infinite}
+@keyframes floatHeart{0%{opacity:0;transform:translateY(100vh) scale(0.5)}10%{opacity:0.6}90%{opacity:0.2}100%{opacity:0;transform:translateY(-10vh) scale(1.2)}}
+
+.lock-bow{font-size:4rem;margin-bottom:0.5rem;animation:bow 3s ease-in-out infinite}
+@keyframes bow{0%,100%{transform:rotate(-5deg) scale(1)}50%{transform:rotate(5deg) scale(1.1)}}
+.lock-title{font-family:'Dancing Script',cursive;font-size:2rem;color:#fff;text-align:center;margin-bottom:0.3rem}
+.lock-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);text-align:center;margin-bottom:2rem}
+
 .lock-display{
-  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
-  border-radius:14px;padding:1rem 2rem;
-  font-size:2rem;font-weight:800;letter-spacing:8px;
-  min-width:200px;text-align:center;margin-bottom:1.5rem;
-  min-height:60px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.15);
+  border-radius:16px;padding:1rem 2rem;min-width:220px;text-align:center;
+  font-size:2.2rem;letter-spacing:12px;color:#fff;margin-bottom:1.5rem;
+  min-height:68px;display:flex;align-items:center;justify-content:center;
+  transition:border-color 0.3s;
 }
-.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:280px;width:100%}
-.key{
-  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);
-  border-radius:14px;padding:1.1rem;font-size:1.3rem;font-weight:800;
-  cursor:pointer;text-align:center;transition:all 0.15s;user-select:none;
-}
-.key:active{background:var(--rose);border-color:var(--rose);transform:scale(0.95)}
-.key.del{font-size:1rem;background:rgba(255,255,255,0.04)}
-.lock-hint{font-size:0.72rem;color:rgba(255,255,255,0.25);margin-top:1.2rem;text-align:center}
-.lock-shake{animation:shake 0.4s ease}
+.lock-display.error{border-color:var(--pink);animation:shake 0.4s ease}
+.lock-display.success{border-color:#4ade80}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
-/* ─── HEADER ─── */
-.page-header{
-  background:linear-gradient(135deg,#0d0508,#1a0a14);
-  padding:2rem 1.5rem 1.5rem;text-align:center;position:relative;overflow:hidden;
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:260px;width:100%}
+.key{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:16px;padding:1.1rem;font-size:1.4rem;font-weight:800;color:#fff;
+  cursor:pointer;text-align:center;transition:all 0.15s;user-select:none;
 }
-.page-header::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 80% at 50% 0%,rgba(233,30,140,0.2),transparent 70%);
-}
-.couple-photos{display:flex;gap:8px;justify-content:center;margin-bottom:1rem;position:relative}
-.couple-photo{
-  width:72px;height:72px;border-radius:50%;object-fit:cover;
-  border:3px solid var(--rose);box-shadow:0 0 0 3px rgba(233,30,140,0.2);
-}
-.couple-placeholder{
-  width:72px;height:72px;border-radius:50%;
-  background:rgba(255,255,255,0.06);border:2px dashed rgba(255,255,255,0.15);
-  display:flex;align-items:center;justify-content:center;font-size:1.8rem;
-}
-.couple-name{
-  font-family:'Playfair Display',serif;font-size:1.8rem;font-style:italic;
-  position:relative;margin-bottom:0.3rem;
-  background:linear-gradient(135deg,#fff,#f2c4ce,var(--rose));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.couple-since{font-size:0.72rem;color:rgba(255,255,255,0.3);letter-spacing:2px;text-transform:uppercase;position:relative}
+.key:active{background:var(--pink);border-color:var(--pink);transform:scale(0.92)}
+.key-del{font-size:1.1rem}
+.key-skip{font-size:0.65rem;letter-spacing:1px;opacity:0.4;padding:0.8rem}
+.lock-hint{font-size:0.7rem;color:rgba(255,255,255,0.2);margin-top:1rem;text-align:center}
 
-/* ─── CONTADOR ─── */
-.counter-section{
-  background:rgba(255,255,255,0.04);margin:0 1rem 0;
-  border-radius:20px;padding:1.2rem;border:1px solid rgba(255,255,255,0.06);
-  position:relative;z-index:1;margin-top:-10px;
-}
-.counter-title{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:1rem}
-.counter-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
-@media(max-width:360px){.counter-grid{grid-template-columns:repeat(3,1fr)}}
-.counter-cell{text-align:center;background:rgba(255,255,255,0.04);border-radius:10px;padding:0.6rem 0.2rem}
-.counter-num{font-size:1.3rem;font-weight:900;color:#fff;display:block;line-height:1}
-.counter-label{font-size:0.5rem;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+/* ───── MAIN ───── */
+#mainContent{display:none;min-height:100vh}
 
-/* ─── MENU ─── */
+/* ───── HEADER ───── */
+.main-header{
+  background:var(--grad);
+  padding:2rem 1.2rem 5rem;text-align:center;position:relative;overflow:hidden;
+}
+.header-sparkles{position:absolute;inset:0;pointer-events:none}
+.sparkle{position:absolute;font-size:1rem;animation:sparkleAnim linear infinite;opacity:0}
+@keyframes sparkleAnim{0%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(0)}}
+
+.header-photos{display:flex;justify-content:center;gap:10px;margin-bottom:1rem;position:relative}
+.header-photo{
+  width:80px;height:80px;border-radius:50%;object-fit:cover;
+  border:3px solid rgba(255,255,255,0.8);
+  box-shadow:0 4px 20px rgba(0,0,0,0.2);
+}
+.header-photo-placeholder{
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(255,255,255,0.2);border:3px solid rgba(255,255,255,0.4);
+  display:flex;align-items:center;justify-content:center;font-size:2rem;
+}
+.header-heart{
+  position:absolute;bottom:-15px;left:50%;transform:translateX(-50%);
+  width:36px;height:36px;background:#fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+  box-shadow:0 4px 12px rgba(233,30,140,0.3);
+}
+.couple-name{font-family:'Dancing Script',cursive;font-size:2.2rem;color:#fff;margin-bottom:0.3rem}
+.couple-since{font-size:0.72rem;color:rgba(255,255,255,0.75);letter-spacing:2px;text-transform:uppercase}
+
+/* ───── MINI COUNTER ───── */
+.mini-counter{
+  background:#fff;margin:0 1rem;border-radius:20px;
+  padding:1rem;margin-top:-2.5rem;position:relative;z-index:10;
+  box-shadow:0 8px 32px rgba(233,30,140,0.15);
+}
+.mini-counter-title{font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:0.8rem}
+.mini-counter-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+@media(max-width:360px){.mini-counter-grid{grid-template-columns:repeat(3,1fr)}}
+.mini-cell{text-align:center;background:var(--bg);border-radius:10px;padding:0.5rem 0.2rem}
+.mini-num{font-size:1.1rem;font-weight:900;color:var(--pink);display:block;line-height:1}
+.mini-label{font-size:0.45rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+/* ───── MENU ───── */
 .menu-section{padding:1.5rem 1rem}
-.menu-title{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:1rem;text-align:center}
+.menu-label{font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:1rem}
 .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .menu-card{
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
-  border-radius:20px;padding:1.5rem 1rem;text-align:center;cursor:pointer;
-  transition:all 0.25s;display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  background:var(--card);border-radius:24px;padding:1.5rem 1rem;
+  text-align:center;cursor:pointer;transition:all 0.25s;
+  box-shadow:0 4px 16px rgba(233,30,140,0.08);
+  border:2px solid transparent;
+  display:flex;flex-direction:column;align-items:center;gap:0.4rem;
 }
-.menu-card:active{transform:scale(0.97)}
-.menu-card:hover{background:rgba(255,255,255,0.07);border-color:var(--rose)}
-.menu-card-icon{font-size:2rem;display:block}
-.menu-card-title{font-weight:800;font-size:0.9rem}
-.menu-card-desc{font-size:0.7rem;color:rgba(255,255,255,0.35)}
-
-/* ─── SECTIONS (modais) ─── */
-.section-modal{
-  position:fixed;inset:0;background:var(--dark);z-index:200;
-  overflow-y:auto;display:none;
-  animation:slideUp 0.35s cubic-bezier(0.16,1,0.3,1);
+.menu-card:active{transform:scale(0.96)}
+.menu-card:hover{border-color:var(--pink);box-shadow:0 8px 24px rgba(233,30,140,0.2)}
+.menu-icon{font-size:2.2rem}
+.menu-card-title{font-weight:800;font-size:0.9rem;color:var(--text)}
+.menu-card-desc{font-size:0.68rem;color:var(--muted)}
+.menu-card.full{grid-column:span 2}
+.menu-card .badge{
+  background:var(--grad);color:#fff;font-size:0.6rem;font-weight:800;
+  padding:2px 8px;border-radius:100px;letter-spacing:1px;
 }
-.section-modal.open{display:block}
-@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
 
-.modal-header{
-  display:flex;align-items:center;gap:0.8rem;
-  padding:1.2rem 1rem;border-bottom:1px solid rgba(255,255,255,0.06);
-  position:sticky;top:0;background:var(--dark);z-index:10;
+/* ───── MODAL ───── */
+.modal{
+  position:fixed;inset:0;z-index:500;background:var(--bg);
+  display:none;flex-direction:column;overflow:hidden;
+}
+.modal.open{display:flex;animation:slideUp 0.35s cubic-bezier(0.16,1,0.3,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-bar{
+  display:flex;align-items:center;gap:0.8rem;padding:1rem 1.2rem;
+  background:var(--card);border-bottom:1px solid #f3e8ff;position:relative;
+  flex-shrink:0;
 }
 .modal-back{
-  width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);
-  border:none;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;background:var(--bg);
+  border:none;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--text);transition:background 0.2s;
 }
-.modal-title{font-weight:800;font-size:1rem}
-.modal-body{padding:1.2rem 1rem 4rem}
+.modal-back:active{background:#f3e8ff}
+.modal-ttl{font-weight:800;font-size:1rem;flex:1}
+.modal-body{flex:1;overflow-y:auto;padding:1.2rem 1rem 4rem}
 
-/* ─── GALERIA ─── */
-.gallery-masonry{columns:2;column-gap:8px}
-.gallery-item{break-inside:avoid;margin-bottom:8px;border-radius:16px;overflow:hidden}
-.gallery-item img{width:100%;display:block}
-.gallery-item:nth-child(odd){margin-top:20px}
-.gallery-item:first-child{margin-top:0}
+/* ───── FOTOS: CARROSSEL ───── */
+.carousel-wrap{position:relative;overflow:hidden;border-radius:20px;margin-bottom:1rem;background:#000}
+.carousel-track{display:flex;transition:transform 0.4s cubic-bezier(0.16,1,0.3,1)}
+.carousel-slide{min-width:100%;position:relative}
+.carousel-slide img{width:100%;height:340px;object-fit:cover;display:block}
+.carousel-caption{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);
+  padding:1.5rem 1rem 0.8rem;color:#fff;
+}
+.carousel-num{font-size:0.7rem;opacity:0.6;margin-bottom:2px}
+.carousel-nav{display:flex;justify-content:center;gap:6px;margin-bottom:1rem}
+.carousel-dot{width:8px;height:8px;border-radius:50%;background:rgba(233,30,140,0.2);transition:all 0.3s;cursor:pointer}
+.carousel-dot.active{background:var(--pink);width:20px;border-radius:100px}
+.carousel-arrows{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 0.5rem;pointer-events:none}
+.carousel-arr{
+  width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);
+  border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  pointer-events:all;transition:background 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+.carousel-arr:active{background:#fff}
 
-/* ─── MENSAGEM ─── */
-.msg-card{
-  background:linear-gradient(135deg,rgba(233,30,140,0.15),rgba(139,92,246,0.1));
-  border:1px solid rgba(233,30,140,0.2);border-radius:24px;padding:2rem 1.5rem;
-  margin-bottom:1rem;
-}
-.msg-quote{font-family:'Playfair Display',serif;font-size:4rem;line-height:0.5;color:var(--rose);opacity:0.5;margin-bottom:1rem;display:block}
-.msg-text{font-family:'Playfair Display',serif;font-size:1.2rem;font-style:italic;line-height:1.9;color:rgba(255,255,255,0.9);white-space:pre-line}
-.msg-sign{margin-top:1.5rem;display:flex;align-items:center;gap:0.8rem}
-.msg-sign-line{flex:1;height:1px;background:rgba(255,255,255,0.1)}
-.msg-sign-text{font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--rose)}
+/* GRID FOTOS */
+.photos-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.photo-thumb{border-radius:16px;overflow:hidden;aspect-ratio:1;cursor:pointer}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s}
+.photo-thumb:active img{transform:scale(0.97)}
 
-/* ─── MÚSICA ─── */
-.player-card{
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
-  border-radius:24px;padding:2rem;text-align:center;
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.95);display:none;align-items:center;justify-content:center}
+.lightbox.open{display:flex}
+.lightbox img{max-width:95%;max-height:90vh;border-radius:12px;object-fit:contain}
+.lightbox-close{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:1.5rem;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* ───── MENSAGEM ───── */
+.msg-hero{
+  background:var(--grad);border-radius:24px;padding:2rem 1.5rem;margin-bottom:1rem;
+  position:relative;overflow:hidden;
 }
-.vinyl-big{
-  width:140px;height:140px;border-radius:50%;
-  background:conic-gradient(#333,var(--rose),#1a1a1a,var(--rose),#333);
-  margin:0 auto 1.5rem;position:relative;
-  animation:spin 3s linear infinite paused;
+.msg-hero::before{content:'❝';position:absolute;top:-10px;left:10px;font-size:6rem;color:rgba(255,255,255,0.1);font-family:serif;line-height:1}
+.msg-reveal-btn{
+  background:#fff;color:var(--pink);border:none;border-radius:16px;
+  padding:0.9rem 2rem;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;
+  cursor:pointer;width:100%;margin-bottom:1rem;transition:all 0.2s;
+  box-shadow:0 4px 16px rgba(233,30,140,0.2);
 }
-.vinyl-big.playing{animation-play-state:running}
-.vinyl-big::after{
+.msg-reveal-btn:active{transform:scale(0.97)}
+.msg-text-box{
+  background:var(--card);border-radius:20px;padding:1.5rem;
+  font-family:'Dancing Script',cursive;font-size:1.2rem;line-height:1.9;
+  color:var(--text);white-space:pre-line;display:none;
+  box-shadow:0 4px 16px rgba(233,30,140,0.08);
+}
+.msg-text-box.revealed{display:block;animation:fadeIn 0.6s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.msg-sign{text-align:right;margin-top:1rem;font-size:0.85rem;color:var(--pink);font-weight:700}
+
+/* ───── MÚSICA ───── */
+.player-wrap{
+  background:var(--card);border-radius:24px;padding:2rem 1.5rem;text-align:center;
+  box-shadow:0 4px 20px rgba(233,30,140,0.1);
+}
+.vinyl{
+  width:160px;height:160px;border-radius:50%;margin:0 auto 1.5rem;
+  background:conic-gradient(#2d1a2e,var(--pink),#1a0d1a,var(--purple),#2d1a2e);
+  position:relative;animation:spin 3s linear infinite paused;
+  box-shadow:0 8px 32px rgba(233,30,140,0.3);
+}
+.vinyl.playing{animation-play-state:running}
+.vinyl::after{
   content:'';position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:36px;height:36px;border-radius:50%;background:var(--dark);
-  border:2px solid rgba(255,255,255,0.1);
+  transform:translate(-50%,-50%);width:40px;height:40px;
+  border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(233,30,140,0.2);
 }
 @keyframes spin{to{transform:rotate(360deg)}}
-.player-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-style:italic;margin-bottom:0.3rem}
-.player-artist{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;letter-spacing:1px}
-.play-btn-big{
-  width:64px;height:64px;border-radius:50%;background:var(--rose);border:none;
-  color:#fff;font-size:1.5rem;cursor:pointer;margin:0 auto;display:flex;align-items:center;justify-content:center;
-  transition:transform 0.2s,box-shadow 0.2s;
+.player-song{font-family:'Dancing Script',cursive;font-size:1.5rem;color:var(--text);margin-bottom:0.3rem}
+.player-artist{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;letter-spacing:1px}
+.play-btn{
+  width:64px;height:64px;border-radius:50%;background:var(--grad);border:none;
+  color:#fff;font-size:1.5rem;cursor:pointer;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(233,30,140,0.4);transition:transform 0.2s;
 }
-.play-btn-big:active{transform:scale(0.95)}
-.play-btn-big:hover{box-shadow:0 8px 24px rgba(233,30,140,0.4)}
+.play-btn:active{transform:scale(0.92)}
+.no-music{text-align:center;padding:3rem;color:var(--muted)}
 
-/* ─── JOGO ─── */
-.game-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:8px;margin-bottom:1.5rem;
-}
-.game-card{
-  aspect-ratio:1;border-radius:12px;cursor:pointer;
-  perspective:600px;position:relative;transition:transform 0.1s;
-}
-.game-card:active{transform:scale(0.95)}
-.game-inner{
+/* ───── JOGO ───── */
+.game-header{display:flex;justify-content:space-around;margin-bottom:1rem}
+.game-stat{text-align:center}
+.game-stat-n{font-size:1.5rem;font-weight:900;color:var(--pink)}
+.game-stat-l{font-size:0.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.game-board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.gcard{aspect-ratio:1;border-radius:14px;cursor:pointer;perspective:600px}
+.gcard-inner{
   width:100%;height:100%;position:relative;
-  transform-style:preserve-3d;transition:transform 0.5s;border-radius:12px;
+  transform-style:preserve-3d;transition:transform 0.5s;border-radius:14px;
 }
-.game-card.flipped .game-inner{transform:rotateY(180deg)}
-.game-front,.game-back{
-  position:absolute;inset:0;border-radius:12px;
+.gcard.flip .gcard-inner{transform:rotateY(180deg)}
+.gcard-front,.gcard-back{
+  position:absolute;inset:0;border-radius:14px;
   backface-visibility:hidden;display:flex;align-items:center;justify-content:center;
 }
-.game-front{
-  background:linear-gradient(135deg,rgba(233,30,140,0.3),rgba(139,92,246,0.3));
-  border:2px solid rgba(255,255,255,0.08);font-size:1.5rem;
+.gcard-front{background:var(--grad);font-size:1.5rem}
+.gcard-back{transform:rotateY(180deg);background:#f3e8ff;overflow:hidden;border:2px solid rgba(233,30,140,0.2)}
+.gcard-back img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+.gcard-back .gemoji{font-size:1.8rem}
+.gcard.matched .gcard-front{background:linear-gradient(135deg,#4ade80,#22d3ee)}
+.gcard.matched .gcard-back{border-color:#4ade80}
+.game-win{
+  text-align:center;padding:2rem;background:linear-gradient(135deg,#f0fdf4,#fff);
+  border-radius:20px;border:2px solid #4ade80;display:none;
 }
-.game-back{
-  transform:rotateY(180deg);
-  background:#333;border:2px solid rgba(255,255,255,0.1);overflow:hidden;
+.restart-btn{
+  background:var(--grad);color:#fff;border:none;border-radius:14px;
+  padding:0.8rem 2rem;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.9rem;
+  cursor:pointer;margin-top:1rem;transition:transform 0.2s;
 }
-.game-back img{width:100%;height:100%;object-fit:cover;border-radius:10px}
-.game-back .emoji-card{font-size:1.8rem}
-.game-card.matched .game-front{background:rgba(34,197,94,0.2);border-color:rgba(34,197,94,0.4)}
-.game-card.matched .game-back{border-color:rgba(34,197,94,0.4)}
-.game-stats{display:flex;justify-content:center;gap:2rem;margin-bottom:1rem}
-.game-stat{text-align:center}
-.game-stat-num{font-size:1.5rem;font-weight:800;color:#fff}
-.game-stat-label{font-size:0.65rem;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px}
-.game-result{
-  text-align:center;padding:2rem;background:rgba(34,197,94,0.1);
-  border:1px solid rgba(34,197,94,0.2);border-radius:20px;display:none;
-}
+.restart-btn:active{transform:scale(0.97)}
 
-/* FULL COUNTER */
-.full-counter{text-align:center;padding:2rem 1rem}
+/* ───── CONTADOR COMPLETO ───── */
 .counter-hero{
-  background:linear-gradient(135deg,rgba(233,30,140,0.1),rgba(139,92,246,0.1));
-  border:1px solid rgba(233,30,140,0.15);border-radius:24px;padding:2rem;margin-bottom:1.5rem;
+  background:var(--grad);border-radius:24px;padding:2rem 1.5rem;
+  text-align:center;margin-bottom:1rem;
 }
-.counter-big-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
-.counter-big-cell{background:rgba(255,255,255,0.05);border-radius:16px;padding:1.2rem 0.5rem}
-.counter-big-num{font-size:2.2rem;font-weight:900;color:#fff;display:block;line-height:1}
-.counter-big-label{font-size:0.6rem;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-.counter-seconds{font-size:0.8rem;color:rgba(255,255,255,0.3);margin-top:1rem}
-.counter-seconds span{color:var(--rose);font-weight:800;font-size:1rem}
+.counter-hero-photo{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.8);margin-bottom:1rem;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+.counter-hero-placeholder{width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1rem}
+.counter-big{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.counter-sm{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.counter-cell{background:rgba(255,255,255,0.15);border-radius:16px;padding:1rem 0.5rem;text-align:center}
+.counter-n{font-size:2rem;font-weight:900;color:#fff;display:block;line-height:1}
+.counter-l{font-size:0.55rem;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.counter-pulse{font-size:0.8rem;color:rgba(255,255,255,0.6);margin-top:1rem}
+.counter-city{text-align:center;font-size:0.75rem;color:var(--muted);margin-top:1rem;letter-spacing:2px;text-transform:uppercase}
 
-/* FOOTER */
-.page-footer{padding:3rem 1rem 2rem;text-align:center;color:rgba(255,255,255,0.15);font-size:0.72rem;letter-spacing:2px}
+/* PAGE FOOTER */
+.page-footer{padding:2rem 1rem;text-align:center;color:var(--muted);font-size:0.72rem}
 </style>
 </head>
-<body id="pagebody">
+<body>
 
 <!-- ─── TELA DE SENHA ─── -->
 <div id="lockScreen">
-  <div class="lock-icon">🔐</div>
+  <div class="lock-hearts" id="lockHearts"></div>
+  <div class="lock-bow">🎀</div>
   <div class="lock-title" id="lockTitle">Surpresa para você!</div>
-  <div class="lock-sub" id="lockSub">Digite a data especial para abrir</div>
-  <div class="lock-display" id="lockDisplay">_ _ _ _ _ _</div>
+  <div class="lock-sub" id="lockSub">Digite a data especial para abrir 💕</div>
+  <div class="lock-display" id="lockDisplay"><span style="opacity:0.3">_ _ _ _</span></div>
   <div class="keypad">
-    <div class="key" onclick="keyPress('1')">1</div>
-    <div class="key" onclick="keyPress('2')">2</div>
-    <div class="key" onclick="keyPress('3')">3</div>
-    <div class="key" onclick="keyPress('4')">4</div>
-    <div class="key" onclick="keyPress('5')">5</div>
-    <div class="key" onclick="keyPress('6')">6</div>
-    <div class="key" onclick="keyPress('7')">7</div>
-    <div class="key" onclick="keyPress('8')">8</div>
-    <div class="key" onclick="keyPress('9')">9</div>
-    <div class="key" onclick="skipLock()" style="font-size:0.7rem;opacity:0.4">Pular</div>
-    <div class="key" onclick="keyPress('0')">0</div>
-    <div class="key del" onclick="keyDel()">⌫</div>
+    <div class="key" onclick="kp('1')">1</div>
+    <div class="key" onclick="kp('2')">2</div>
+    <div class="key" onclick="kp('3')">3</div>
+    <div class="key" onclick="kp('4')">4</div>
+    <div class="key" onclick="kp('5')">5</div>
+    <div class="key" onclick="kp('6')">6</div>
+    <div class="key" onclick="kp('7')">7</div>
+    <div class="key" onclick="kp('8')">8</div>
+    <div class="key" onclick="kp('9')">9</div>
+    <div class="key key-skip" onclick="unlock()">Pular</div>
+    <div class="key" onclick="kp('0')">0</div>
+    <div class="key key-del" onclick="kdel()">⌫</div>
   </div>
-  <div class="lock-hint" id="lockHint">Ex: se começaram em 12/06, digite 1206</div>
+  <div class="lock-hint" id="lockHint">Ex: começaram em 12/06? Digite 1206</div>
 </div>
 
-<!-- ─── CONTEÚDO ─── -->
-<div id="pageContent" style="display:none">
+<!-- ─── CONTEÚDO PRINCIPAL ─── -->
+<div id="mainContent">
 
   <!-- HEADER -->
-  <div class="page-header">
-    <div class="couple-photos" id="couplePhotos"><div class="couple-placeholder">💕</div></div>
+  <div class="main-header">
+    <div class="header-sparkles" id="headerSparkles"></div>
+    <div class="header-photos" id="headerPhotos">
+      <div class="header-photo-placeholder">💕</div>
+    </div>
+    <div class="header-heart">❤️</div>
+    <br>
     <div class="couple-name" id="coupleName">Meu amor</div>
     <div class="couple-since" id="coupleSince"></div>
   </div>
 
-  <!-- CONTADOR RÁPIDO -->
-  <div class="counter-section">
-    <div class="counter-title">💕 tempo que nossos corações batem juntos</div>
-    <div class="counter-grid">
-      <div class="counter-cell"><span class="counter-num" id="ct-anos">0</span><span class="counter-label">Anos</span></div>
-      <div class="counter-cell"><span class="counter-num" id="ct-meses">0</span><span class="counter-label">Meses</span></div>
-      <div class="counter-cell"><span class="counter-num" id="ct-dias">0</span><span class="counter-label">Dias</span></div>
-      <div class="counter-cell"><span class="counter-num" id="ct-horas">0</span><span class="counter-label">Horas</span></div>
-      <div class="counter-cell"><span class="counter-num" id="ct-min">0</span><span class="counter-label">Min</span></div>
-      <div class="counter-cell"><span class="counter-num" id="ct-seg">0</span><span class="counter-label">Seg</span></div>
+  <!-- MINI CONTADOR -->
+  <div class="mini-counter">
+    <div class="mini-counter-title">💕 tempo que nossos corações batem juntos</div>
+    <div class="mini-counter-grid">
+      <div class="mini-cell"><span class="mini-num" id="mn-a">0</span><span class="mini-label">Anos</span></div>
+      <div class="mini-cell"><span class="mini-num" id="mn-m">0</span><span class="mini-label">Meses</span></div>
+      <div class="mini-cell"><span class="mini-num" id="mn-d">0</span><span class="mini-label">Dias</span></div>
+      <div class="mini-cell"><span class="mini-num" id="mn-h">0</span><span class="mini-label">Horas</span></div>
+      <div class="mini-cell"><span class="mini-num" id="mn-mi">0</span><span class="mini-label">Min</span></div>
+      <div class="mini-cell"><span class="mini-num" id="mn-s">0</span><span class="mini-label">Seg</span></div>
     </div>
   </div>
 
   <!-- MENU -->
   <div class="menu-section">
-    <div class="menu-title">✦ nossa página especial ✦</div>
+    <div class="menu-label">✨ nossa página especial ✨</div>
     <div class="menu-grid">
-      <div class="menu-card" onclick="openModal('modalFotos')">
-        <span class="menu-card-icon">📸</span>
+      <div class="menu-card" onclick="openModal('mFotos')">
+        <div class="menu-icon">📸</div>
         <div class="menu-card-title">Nossas Fotos</div>
         <div class="menu-card-desc">momentos preciosos</div>
       </div>
-      <div class="menu-card" onclick="openModal('modalMsg')">
-        <span class="menu-card-icon">💌</span>
+      <div class="menu-card" onclick="openModal('mMsg')">
+        <div class="menu-icon">💌</div>
         <div class="menu-card-title">Mensagem</div>
         <div class="menu-card-desc">do meu coração</div>
       </div>
-      <div class="menu-card" onclick="openModal('modalMusica')">
-        <span class="menu-card-icon">🎵</span>
+      <div class="menu-card" onclick="openModal('mMusica')">
+        <div class="menu-icon">🎵</div>
         <div class="menu-card-title">Nossa Música</div>
         <div class="menu-card-desc">nossa trilha sonora</div>
       </div>
-      <div class="menu-card" onclick="openModal('modalJogo')">
-        <span class="menu-card-icon">🧩</span>
+      <div class="menu-card" onclick="openModal('mJogo')">
+        <div class="menu-icon">🧩</div>
         <div class="menu-card-title">Jogo da Memória</div>
         <div class="menu-card-desc">combine as peças</div>
       </div>
-      <div class="menu-card" onclick="openModal('modalCounter')" style="grid-column:span 2">
-        <span class="menu-card-icon">⏱</span>
+      <div class="menu-card full" onclick="openModal('mCounter')">
+        <div class="menu-icon">⏱️</div>
         <div class="menu-card-title">Tempo Juntos</div>
-        <div class="menu-card-desc">nossa jornada do amor</div>
+        <div class="menu-card-desc">nossa jornada do amor — com segundos ao vivo</div>
       </div>
     </div>
   </div>
 
-  <div class="page-footer">feito com ❤ · amor eterno</div>
+  <div class="page-footer">feito com ❤️ · amor eterno</div>
 </div>
 
-<!-- ─── MODAIS ─── -->
-
-<!-- FOTOS -->
-<div class="section-modal" id="modalFotos">
-  <div class="modal-header">
-    <button class="modal-back" onclick="closeModal('modalFotos')">←</button>
-    <div class="modal-title">📸 Nossas Fotos</div>
+<!-- ─── MODAL: FOTOS ─── -->
+<div class="modal" id="mFotos">
+  <div class="modal-bar">
+    <button class="modal-back" onclick="closeModal('mFotos')">←</button>
+    <div class="modal-ttl">📸 Nossas Fotos</div>
   </div>
   <div class="modal-body">
-    <div class="gallery-masonry" id="galleryGrid"></div>
-    <div id="noPhotos" style="text-align:center;padding:3rem;color:rgba(255,255,255,0.2)">Nenhuma foto adicionada</div>
-  </div>
-</div>
-
-<!-- MENSAGEM -->
-<div class="section-modal" id="modalMsg">
-  <div class="modal-header">
-    <button class="modal-back" onclick="closeModal('modalMsg')">←</button>
-    <div class="modal-title">💌 Mensagem Especial</div>
-  </div>
-  <div class="modal-body">
-    <div class="msg-card">
-      <span class="msg-quote">"</span>
-      <div class="msg-text" id="msgText">Carregando...</div>
-      <div class="msg-sign">
-        <div class="msg-sign-line"></div>
-        <div class="msg-sign-text" id="msgSign">com amor ❤</div>
-        <div class="msg-sign-line"></div>
+    <!-- CARROSSEL -->
+    <div class="carousel-wrap" id="carouselWrap" style="display:none">
+      <div class="carousel-track" id="carouselTrack"></div>
+      <div class="carousel-arrows">
+        <button class="carousel-arr" onclick="carMove(-1)">‹</button>
+        <button class="carousel-arr" onclick="carMove(1)">›</button>
       </div>
+    </div>
+    <div class="carousel-nav" id="carouselNav"></div>
+    <!-- GRID -->
+    <div class="photos-grid" id="photosGrid"></div>
+    <div id="noFotos" style="text-align:center;padding:3rem;color:var(--muted)">Nenhuma foto adicionada 📷</div>
+  </div>
+</div>
+
+<!-- ─── MODAL: MENSAGEM ─── -->
+<div class="modal" id="mMsg">
+  <div class="modal-bar">
+    <button class="modal-back" onclick="closeModal('mMsg')">←</button>
+    <div class="modal-ttl">💌 Mensagem Especial</div>
+  </div>
+  <div class="modal-body">
+    <div class="msg-hero">
+      <div style="font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:0.5rem">mensagem especial</div>
+      <div style="font-family:'Dancing Script',cursive;font-size:1.6rem;color:#fff" id="msgHeroName">Para meu amor</div>
+    </div>
+    <button class="msg-reveal-btn" onclick="revealMsg()" id="revealBtn">💌 Toque para revelar a mensagem</button>
+    <div class="msg-text-box" id="msgBox">
+      <div id="msgContent"></div>
+      <div class="msg-sign" id="msgSign">— com amor ❤️</div>
     </div>
   </div>
 </div>
 
-<!-- MÚSICA -->
-<div class="section-modal" id="modalMusica">
-  <div class="modal-header">
-    <button class="modal-back" onclick="closeModal('modalMusica')">←</button>
-    <div class="modal-title">🎵 Nossa Música</div>
+<!-- ─── MODAL: MÚSICA ─── -->
+<div class="modal" id="mMusica">
+  <div class="modal-bar">
+    <button class="modal-back" onclick="closeModal('mMusica')">←</button>
+    <div class="modal-ttl">🎵 Nossa Música</div>
   </div>
   <div class="modal-body">
-    <div class="player-card">
-      <div class="vinyl-big" id="vinylBig"></div>
-      <div class="player-title" id="playerTitle">Nossa música especial</div>
+    <div class="player-wrap" id="playerWrap">
+      <div class="vinyl" id="vinyl"></div>
+      <div class="player-song" id="playerSong">Nossa música</div>
       <div class="player-artist" id="playerArtist">Para você</div>
-      <button class="play-btn-big" id="playBtnBig" onclick="togglePlay()">▶</button>
+      <button class="play-btn" onclick="togglePlay()" id="playBtn">▶</button>
     </div>
-    <iframe id="ytFrame" width="0" height="0" frameborder="0" allow="autoplay" style="display:none"></iframe>
+    <div class="no-music" id="noMusic" style="display:none">🎵 Nenhuma música adicionada</div>
+    <iframe id="ytFrame" width="0" height="0" frameborder="0" allow="autoplay" style="display:none;position:absolute"></iframe>
   </div>
 </div>
 
-<!-- JOGO -->
-<div class="section-modal" id="modalJogo">
-  <div class="modal-header">
-    <button class="modal-back" onclick="closeModal('modalJogo')">←</button>
-    <div class="modal-title">🧩 Jogo da Memória</div>
+<!-- ─── MODAL: JOGO ─── -->
+<div class="modal" id="mJogo">
+  <div class="modal-bar">
+    <button class="modal-back" onclick="closeModal('mJogo')">←</button>
+    <div class="modal-ttl">🧩 Jogo da Memória</div>
   </div>
   <div class="modal-body">
-    <div class="game-stats">
-      <div class="game-stat"><div class="game-stat-num" id="gameAttempts">0</div><div class="game-stat-label">Tentativas</div></div>
-      <div class="game-stat"><div class="game-stat-num" id="gameMatches">0</div><div class="game-stat-label">Pares</div></div>
-      <div class="game-stat"><div class="game-stat-num" id="gameTime">0s</div><div class="game-stat-label">Tempo</div></div>
+    <div class="game-header">
+      <div class="game-stat"><div class="game-stat-n" id="gAttempts">0</div><div class="game-stat-l">Tentativas</div></div>
+      <div class="game-stat"><div class="game-stat-n" id="gPairs">0</div><div class="game-stat-l">Pares</div></div>
+      <div class="game-stat"><div class="game-stat-n" id="gTime">0s</div><div class="game-stat-l">Tempo</div></div>
     </div>
-    <div class="game-grid" id="gameGrid"></div>
-    <div class="game-result" id="gameResult">
-      <div style="font-size:3rem;margin-bottom:0.5rem">🎉</div>
-      <div style="font-weight:800;font-size:1.2rem;margin-bottom:0.3rem">Você ganhou!</div>
-      <div style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:1rem">Assim como você ganhou meu coração 💕</div>
-      <button onclick="initGame()" style="background:var(--rose);color:#fff;border:none;border-radius:12px;padding:0.8rem 1.5rem;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer">Jogar de novo</button>
+    <div class="game-board" id="gameBoard"></div>
+    <div class="game-win" id="gameWin">
+      <div style="font-size:3rem">🎉</div>
+      <div style="font-weight:800;font-size:1.2rem;margin:0.5rem 0">Você ganhou!</div>
+      <div style="color:var(--muted);font-size:0.85rem">Assim como você ganhou meu coração 💕</div>
+      <button class="restart-btn" onclick="initGame()">Jogar de novo</button>
     </div>
   </div>
 </div>
 
-<!-- CONTADOR COMPLETO -->
-<div class="section-modal" id="modalCounter">
-  <div class="modal-header">
-    <button class="modal-back" onclick="closeModal('modalCounter')">←</button>
-    <div class="modal-title">⏱ Tempo Juntos</div>
+<!-- ─── MODAL: CONTADOR ─── -->
+<div class="modal" id="mCounter">
+  <div class="modal-bar">
+    <button class="modal-back" onclick="closeModal('mCounter')">←</button>
+    <div class="modal-ttl">⏱️ Tempo Juntos</div>
   </div>
-  <div class="modal-body full-counter">
-    <div class="couple-photos" id="counterPhoto" style="justify-content:center;margin-bottom:1.5rem"></div>
+  <div class="modal-body">
     <div class="counter-hero">
-      <div style="font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem">nossa jornada do amor</div>
-      <div class="counter-big-grid">
-        <div class="counter-big-cell"><span class="counter-big-num" id="cb-anos">0</span><span class="counter-big-label">Anos</span></div>
-        <div class="counter-big-cell"><span class="counter-big-num" id="cb-meses">0</span><span class="counter-big-label">Meses</span></div>
-        <div class="counter-big-cell"><span class="counter-big-num" id="cb-dias">0</span><span class="counter-big-label">Dias</span></div>
+      <div id="counterHeroPhoto" style="display:flex;justify-content:center"><div class="counter-hero-placeholder">💕</div></div>
+      <div style="font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:1.2rem">nossa jornada do amor</div>
+      <div class="counter-big">
+        <div class="counter-cell"><span class="counter-n" id="cb-a">0</span><span class="counter-l">Anos</span></div>
+        <div class="counter-cell"><span class="counter-n" id="cb-m">0</span><span class="counter-l">Meses</span></div>
+        <div class="counter-cell"><span class="counter-n" id="cb-d">0</span><span class="counter-l">Dias</span></div>
       </div>
-      <div class="counter-big-grid">
-        <div class="counter-big-cell"><span class="counter-big-num" id="cb-horas">0</span><span class="counter-big-label">Horas</span></div>
-        <div class="counter-big-cell"><span class="counter-big-num" id="cb-min">0</span><span class="counter-big-label">Minutos</span></div>
-        <div class="counter-big-cell"><span class="counter-big-num" id="cb-seg">0</span><span class="counter-big-label">Segundos</span></div>
+      <div class="counter-sm">
+        <div class="counter-cell"><span class="counter-n" id="cb-h">0</span><span class="counter-l">Horas</span></div>
+        <div class="counter-cell"><span class="counter-n" id="cb-mi">0</span><span class="counter-l">Minutos</span></div>
+        <div class="counter-cell"><span class="counter-n" id="cb-s">0</span><span class="counter-l">Segundos</span></div>
       </div>
-      <div class="counter-seconds">❤ tempo que nossos corações batem juntos ❤</div>
+      <div class="counter-pulse" id="counterPulse">❤️ tempo que nossos corações batem juntos ❤️</div>
     </div>
-    <div id="counterCity" style="font-size:0.75rem;color:rgba(255,255,255,0.25);letter-spacing:2px;text-transform:uppercase"></div>
+    <div class="counter-city" id="counterCity"></div>
   </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close">✕</button>
+  <img id="lightboxImg" src="" alt="">
 </div>
 
 <script type="module">
-const SUPABASE_URL='https://ugwzbqhxtejijvfujgrj.supabase.co';
-const SUPABASE_KEY='sb_publishable_Yyt8D5TPzzxBBki7Mw79SA_PQGtGTzo';
+const SB_URL='https://ugwzbqhxtejijvfujgrj.supabase.co';
+const SB_KEY='sb_publishable_Yyt8D5TPzzxBBki7Mw79SA_PQGtGTzo';
 
-// ─── CARREGAR DADOS ───────────────────────────────────────────────
-async function carregarDados(){
+// ── CARREGAR DADOS ────────────────────────────────────────────────
+async function load(){
   const id=new URLSearchParams(window.location.search).get('id');
-  if(!id) return dadosDemo();
+  if(!id) return demo();
   try{
-    const r=await fetch(`${SUPABASE_URL}/rest/v1/paginas?id=eq.${id}&select=*`,
-      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    const r=await fetch(`${SB_URL}/rest/v1/paginas?id=eq.${id}&select=*`,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
     const[row]=await r.json();
-    if(!row){document.body.innerHTML='<div style="color:#fff;text-align:center;padding:4rem">💔 Página não encontrada.</div>';return null}
+    if(!row){document.body.innerHTML='<div style="text-align:center;padding:4rem;color:#888">💔 Página não encontrada.</div>';return null}
     return{nome:row.nome||'Meu amor',tema:row.tema||'rose',mensagem:row.mensagem||'',
-      musicaNome:row.musica_nome||'',musicaArtista:row.musica_artista||'',
-      musicaUrl:row.musica_url||'',dataInicio:row.data_inicio||'',fotos:row.fotos||[]};
-  }catch(e){return dadosDemo()}
+      musicaNome:row.musica_nome||'',musicaArtista:row.musica_artista||'',musicaUrl:row.musica_url||'',
+      data:row.data_inicio||'',fotos:row.fotos||[]};
+  }catch{return demo()}
 }
-function dadosDemo(){
+function demo(){
   return{nome:'Meu Amor',tema:'rose',
-    mensagem:'Você é o motivo pelo qual eu sorrio todos os dias.\n\nCom você aprendi que o amor pode ser ainda mais lindo do que eu imaginava.',
-    musicaNome:'',musicaArtista:'',musicaUrl:'',dataInicio:'',fotos:[]};
+    mensagem:'Você é o motivo pelo qual eu sorrio todos os dias.\n\nCom você aprendi que o amor pode ser ainda mais lindo do que eu imaginava.\n\nCada momento ao seu lado é um presente que quero guardar para sempre.',
+    musicaNome:'',musicaArtista:'',musicaUrl:'',data:'',fotos:[]};
 }
-const data=await carregarDados();
-if(!data) throw new Error('sem dados');
+const D=await load();
+if(!D) throw '';
 
-// ─── TEMA ─────────────────────────────────────────────────────────
-document.getElementById('pagebody').className='theme-'+data.tema;
+// ── PARTÍCULAS TELA DE SENHA ──────────────────────────────────────
+const lh=document.getElementById('lockHearts');
+for(let i=0;i<20;i++){
+  const el=document.createElement('div');
+  el.className='lock-heart';
+  el.textContent=['💕','❤️','💗','✨','🌸'][Math.floor(Math.random()*5)];
+  el.style.cssText=`left:${Math.random()*100}%;animation-duration:${6+Math.random()*8}s;animation-delay:${-Math.random()*10}s;font-size:${0.8+Math.random()*1.2}rem`;
+  lh.appendChild(el);
+}
 
-// ─── SENHA ────────────────────────────────────────────────────────
-let lockCode='';
-const correctCode=data.dataInicio?data.dataInicio.replace(/\//g,'').replace(/-/g,'').substring(4,6)+data.dataInicio.replace(/\//g,'').replace(/-/g,'').substring(2,4):'';
+// ── TELA DE SENHA ────────────────────────────────────────────────
+let code='';
+// senha = DDMM da data de início
+function buildCode(){
+  if(!D.data) return '';
+  const p=D.data.includes('/')?D.data.split('/'):D.data.split('-').reverse();
+  return (p[0]||'')+(p[1]||'');
+}
+const correctCode=buildCode();
+if(D.nome&&D.nome!=='Meu amor'){
+  document.getElementById('lockTitle').textContent=`Surpresa para ${D.nome}! 💕`;
+}
+if(correctCode) document.getElementById('lockHint').textContent=`Dica: é a data especial de vocês (DDMM)`;
+else document.getElementById('lockHint').textContent=`Toque em "Pular" para abrir diretamente`;
 
-if(data.nome) document.getElementById('lockTitle').textContent=`Surpresa para ${data.nome}! 💕`;
-
-window.keyPress=function(k){
-  if(lockCode.length>=6) return;
-  lockCode+=k;
-  updateDisplay();
-  if(lockCode.length>=4 && (lockCode===correctCode || !correctCode)) unlock();
-  else if(lockCode.length>=4 && lockCode!==correctCode && correctCode){
-    setTimeout(()=>{
-      document.getElementById('lockDisplay').classList.add('lock-shake');
-      setTimeout(()=>{document.getElementById('lockDisplay').classList.remove('lock-shake');lockCode='';updateDisplay()},400);
-    },100);
+window.kp=function(k){
+  if(code.length>=4) return;
+  code+=k;
+  renderCode();
+  if(code.length===4){
+    if(!correctCode||code===correctCode){
+      document.getElementById('lockDisplay').className='lock-display success';
+      setTimeout(unlock,500);
+    } else {
+      document.getElementById('lockDisplay').className='lock-display error';
+      setTimeout(()=>{code='';document.getElementById('lockDisplay').className='lock-display';renderCode()},600);
+    }
   }
 };
-window.keyDel=function(){lockCode=lockCode.slice(0,-1);updateDisplay()};
-window.skipLock=function(){unlock()};
-function updateDisplay(){
+window.kdel=function(){code=code.slice(0,-1);renderCode()};
+function renderCode(){
   const d=document.getElementById('lockDisplay');
-  d.textContent=lockCode?'•'.repeat(lockCode.length)+'_'.repeat(Math.max(0,4-lockCode.length)):'\_ \_ \_ \_';
-  if(!lockCode) d.textContent='_ _ _ _';
+  if(!code){d.innerHTML='<span style="opacity:0.3">_ _ _ _</span>';return}
+  d.textContent='•'.repeat(code.length)+'_'.repeat(4-code.length);
 }
-function unlock(){
+window.unlock=function(){
   const ls=document.getElementById('lockScreen');
-  ls.style.transition='opacity 0.8s';ls.style.opacity='0';
-  setTimeout(()=>{ls.style.display='none';document.getElementById('pageContent').style.display='block';initContent()},800);
+  ls.style.transition='opacity 0.7s,transform 0.7s';
+  ls.style.opacity='0';ls.style.transform='scale(1.05)';
+  setTimeout(()=>{ls.style.display='none';document.getElementById('mainContent').style.display='block';init()},700);
+};
+
+// ── SPARKLES HEADER ───────────────────────────────────────────────
+const hs=document.getElementById('headerSparkles');
+for(let i=0;i<15;i++){
+  const el=document.createElement('div');
+  el.className='sparkle';
+  el.textContent=['✨','💫','⭐','🌟'][Math.floor(Math.random()*4)];
+  el.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*4}s`;
+  hs.appendChild(el);
 }
-if(!correctCode) setTimeout(()=>{/* sem senha, ainda mostra tela */},0);
 
-// ─── CONTEÚDO ─────────────────────────────────────────────────────
-function initContent(){
+// ── INIT ─────────────────────────────────────────────────────────
+function init(){
   // nome
-  document.getElementById('coupleName').textContent=data.nome;
+  document.getElementById('coupleName').textContent=D.nome;
+  document.getElementById('msgHeroName').textContent=`Para ${D.nome} 💕`;
+  document.getElementById('msgContent').textContent=D.mensagem||'Com amor, para você.';
+  document.getElementById('msgSign').textContent=`— com todo meu amor ❤️`;
 
-  // fotos
-  const cp=document.getElementById('couplePhotos');
-  if(data.fotos&&data.fotos.length>0){
-    cp.innerHTML=data.fotos.slice(0,2).map(f=>`<img class="couple-photo" src="${f}" alt="">`).join('');
-    document.getElementById('counterPhoto').innerHTML=data.fotos.slice(0,1).map(f=>`<img class="couple-photo" src="${f}" alt="" style="width:90px;height:90px">`).join('');
+  // fotos header
+  if(D.fotos&&D.fotos.length){
+    const hp=document.getElementById('headerPhotos');
+    hp.innerHTML=D.fotos.slice(0,2).map(f=>`<img class="header-photo" src="${f}" alt="">`).join('');
+
+    // carrossel
+    document.getElementById('carouselWrap').style.display='block';
+    document.getElementById('noFotos').style.display='none';
+    const track=document.getElementById('carouselTrack');
+    const nav=document.getElementById('carouselNav');
+    D.fotos.forEach((f,i)=>{
+      track.innerHTML+=`<div class="carousel-slide"><img src="${f}" alt=""><div class="carousel-caption"><div class="carousel-num">${i+1} / ${D.fotos.length}</div></div></div>`;
+      nav.innerHTML+=`<div class="carousel-dot${i===0?' active':''}" onclick="carGo(${i})"></div>`;
+    });
+
+    // grid
+    const pg=document.getElementById('photosGrid');
+    D.fotos.forEach(f=>{
+      pg.innerHTML+=`<div class="photo-thumb" onclick="openLightbox('${f}')"><img src="${f}" alt="" loading="lazy"></div>`;
+    });
+
+    // contador foto
+    document.getElementById('counterHeroPhoto').innerHTML=`<img class="counter-hero-photo" src="${D.fotos[0]}" alt="">`;
   }
-
-  // galeria
-  const gg=document.getElementById('galleryGrid');
-  if(data.fotos&&data.fotos.length>0){
-    document.getElementById('noPhotos').style.display='none';
-    gg.innerHTML=data.fotos.map(f=>`<div class="gallery-item"><img src="${f}" alt="" loading="lazy"></div>`).join('');
-  }
-
-  // mensagem
-  document.getElementById('msgText').textContent=data.mensagem||'Com amor, para você.';
-  document.getElementById('msgSign').textContent=`de quem te ama ❤`;
 
   // data
-  if(data.dataInicio){
-    const p=data.dataInicio.includes('/')?data.dataInicio.split('/'):data.dataInicio.split('-').reverse();
-    document.getElementById('coupleSince').textContent=`juntos desde ${p[0]}/${p[1]}/${p[2]||p[2]}`;
+  if(D.data){
+    const p=D.data.includes('/')?D.data.split('/'):D.data.split('-').reverse();
+    document.getElementById('coupleSince').textContent=`juntos desde ${p[0]}/${p[1]}/${p[2]}`;
     startCounter();
   }
 
   // música
-  if(data.musicaNome){
-    document.getElementById('playerTitle').textContent=data.musicaNome;
-    document.getElementById('playerArtist').textContent=data.musicaArtista||'Para você';
-    if(data.musicaUrl){
-      const m=data.musicaUrl.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if(D.musicaNome){
+    document.getElementById('playerSong').textContent=D.musicaNome;
+    document.getElementById('playerArtist').textContent=D.musicaArtista||'Para você';
+    if(D.musicaUrl){
+      const m=D.musicaUrl.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
       if(m) document.getElementById('ytFrame').src=`https://www.youtube.com/embed/${m[1]}?enablejsapi=1&autoplay=0`;
     }
+  } else {
+    document.getElementById('playerWrap').style.display='none';
+    document.getElementById('noMusic').style.display='block';
   }
 
   initGame();
 }
 
-// ─── CONTADOR ─────────────────────────────────────────────────────
-function startCounter(){
-  function calc(){
-    let start;
-    if(data.dataInicio.includes('/')){
-      const p=data.dataInicio.split('/');
-      start=new Date(p[2],p[1]-1,p[0]);
-    }else{
-      start=new Date(data.dataInicio);
-    }
-    const diff=Date.now()-start;
-    if(diff<0) return;
-    const anos=Math.floor(diff/(365.25*864e5));
-    const meses=Math.floor((diff%(365.25*864e5))/(30.44*864e5));
-    const dias=Math.floor((diff%(30.44*864e5))/864e5);
-    const horas=Math.floor((diff%864e5)/36e5);
-    const min=Math.floor((diff%36e5)/6e4);
-    const seg=Math.floor((diff%6e4)/1e3);
-    // mini
-    ['ct-anos','ct-meses','ct-dias','ct-horas','ct-min','ct-seg'].forEach((id,i)=>{
-      const el=document.getElementById(id);
-      if(el) el.textContent=[anos,meses,dias,horas,min,seg][i];
-    });
-    // big
-    ['cb-anos','cb-meses','cb-dias','cb-horas','cb-min','cb-seg'].forEach((id,i)=>{
-      const el=document.getElementById(id);
-      if(el) el.textContent=[anos,meses,dias,horas,min,seg][i];
-    });
-  }
-  calc();setInterval(calc,1000);
-}
+// ── CARROSSEL ───────────────────────────────────────────────────
+let carIdx=0;
+window.carMove=function(dir){carGo(carIdx+dir)};
+window.carGo=function(i){
+  const slides=document.querySelectorAll('.carousel-slide');
+  const dots=document.querySelectorAll('.carousel-dot');
+  if(!slides.length) return;
+  carIdx=(i+slides.length)%slides.length;
+  document.getElementById('carouselTrack').style.transform=`translateX(-${carIdx*100}%)`;
+  dots.forEach((d,j)=>d.classList.toggle('active',j===carIdx));
+};
+// auto slide
+setInterval(()=>{ if(document.querySelectorAll('.carousel-slide').length) carMove(1); },4000);
 
-// ─── MODAIS ───────────────────────────────────────────────────────
-window.openModal=function(id){
-  document.getElementById(id).classList.add('open');
+// ── LIGHTBOX ─────────────────────────────────────────────────────
+window.openLightbox=function(src){
+  document.getElementById('lightboxImg').src=src;
+  document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow='hidden';
 };
-window.closeModal=function(id){
-  const m=document.getElementById(id);
-  m.style.animation='slideDown 0.3s ease forwards';
-  setTimeout(()=>{m.classList.remove('open');m.style.animation='';document.body.style.overflow=''},300);
+window.closeLightbox=function(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
 };
-const styleEl=document.createElement('style');
-styleEl.textContent='@keyframes slideDown{from{transform:translateY(0);opacity:1}to{transform:translateY(100%);opacity:0}}';
-document.head.appendChild(styleEl);
 
-// ─── MÚSICA ───────────────────────────────────────────────────────
+// ── MENSAGEM REVEAL ──────────────────────────────────────────────
+window.revealMsg=function(){
+  document.getElementById('revealBtn').style.display='none';
+  document.getElementById('msgBox').classList.add('revealed');
+};
+
+// ── MÚSICA ───────────────────────────────────────────────────────
 let playing=false;
 window.togglePlay=function(){
   const frame=document.getElementById('ytFrame');
-  const vinyl=document.getElementById('vinylBig');
-  const btn=document.getElementById('playBtnBig');
+  const vinyl=document.getElementById('vinyl');
+  const btn=document.getElementById('playBtn');
   playing=!playing;
   if(playing){
     frame.style.display='block';vinyl.classList.add('playing');btn.textContent='⏸';
@@ -579,71 +670,93 @@ window.togglePlay=function(){
   }
 };
 
-// ─── JOGO DA MEMÓRIA ──────────────────────────────────────────────
-let gameAttempts=0,gameMatchCount=0,gameTimer=0,gameTimerInterval=null;
-let flipped=[],matched=[],canFlip=true;
+// ── CONTADOR ─────────────────────────────────────────────────────
+function startCounter(){
+  function calc(){
+    let start;
+    if(D.data.includes('/')){const p=D.data.split('/');start=new Date(p[2],p[1]-1,p[0]);}
+    else start=new Date(D.data);
+    const diff=Date.now()-start;
+    if(diff<0) return;
+    const a=Math.floor(diff/(365.25*864e5));
+    const m=Math.floor((diff%(365.25*864e5))/(30.44*864e5));
+    const d=Math.floor((diff%(30.44*864e5))/864e5);
+    const h=Math.floor((diff%864e5)/36e5);
+    const mi=Math.floor((diff%36e5)/6e4);
+    const s=Math.floor((diff%6e4)/1e3);
+    ['mn-a','mn-m','mn-d','mn-h','mn-mi','mn-s'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[a,m,d,h,mi,s][i]});
+    ['cb-a','cb-m','cb-d','cb-h','cb-mi','cb-s'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[a,m,d,h,mi,s][i]});
+  }
+  calc();setInterval(calc,1000);
+}
+
+// ── MODAIS ───────────────────────────────────────────────────────
+window.openModal=function(id){
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+};
+window.closeModal=function(id){
+  const m=document.getElementById(id);
+  m.style.animation='none';
+  m.style.transform='translateY(0)';
+  requestAnimationFrame(()=>{
+    m.style.transition='transform 0.3s ease,opacity 0.3s ease';
+    m.style.transform='translateY(100%)';m.style.opacity='0';
+    setTimeout(()=>{m.classList.remove('open');m.style.transform='';m.style.opacity='';m.style.transition='';document.body.style.overflow=''},320);
+  });
+};
+
+// ── JOGO ─────────────────────────────────────────────────────────
+let gAttempts=0,gPairs=0,gTime=0,gTimer=null,gFlipped=[],gCanFlip=true;
+const EMOJIS=['❤️','💋','💑','💝','🌹','💐','✨','🎵','🦋','🌙'];
 
 window.initGame=function(){
-  const grid=document.getElementById('gameGrid');
-  document.getElementById('gameResult').style.display='none';
-  grid.style.display='grid';
-  gameAttempts=0;gameMatchCount=0;gameTimer=0;flipped=[];matched=[];canFlip=true;
-  clearInterval(gameTimerInterval);
-  document.getElementById('gameAttempts').textContent='0';
-  document.getElementById('gameMatches').textContent='0';
-  document.getElementById('gameTime').textContent='0s';
+  gAttempts=0;gPairs=0;gTime=0;gFlipped=[];gCanFlip=true;
+  clearInterval(gTimer);
+  ['gAttempts','gPairs'].forEach(id=>document.getElementById(id).textContent='0');
+  document.getElementById('gTime').textContent='0s';
+  document.getElementById('gameWin').style.display='none';
+  document.getElementById('gameBoard').style.display='grid';
 
-  const EMOJIS=['❤️','💋','💑','💝','🌹','💐','✨','🎵'];
   let items=[];
-  if(data.fotos&&data.fotos.length>=2){
-    const useFotos=data.fotos.slice(0,4);
+  const useFotos=D.fotos&&D.fotos.length>=2?D.fotos.slice(0,4):[];
+  if(useFotos.length>=2){
     items=[...useFotos,...useFotos];
-    if(items.length<8){const extra=EMOJIS.slice(0,(8-items.length)/2);items=[...items,...extra,...extra]}
+    if(items.length<8){const e=EMOJIS.slice(0,(8-items.length)/2);items=[...items,...e,...e]}
     items=items.slice(0,8);
   }else{
     items=[...EMOJIS.slice(0,4),...EMOJIS.slice(0,4)];
   }
   items=items.sort(()=>Math.random()-0.5);
 
-  grid.innerHTML=items.map((item,i)=>`
-    <div class="game-card" data-index="${i}" data-value="${item}" onclick="flipCard(this)">
-      <div class="game-inner">
-        <div class="game-front">💕</div>
-        <div class="game-back">${item.startsWith('http')?`<img src="${item}" alt="">`:`<div class="emoji-card">${item}</div>`}</div>
+  document.getElementById('gameBoard').innerHTML=items.map((v,i)=>`
+    <div class="gcard" data-i="${i}" data-v="${v}" onclick="gFlip(this)">
+      <div class="gcard-inner">
+        <div class="gcard-front">💕</div>
+        <div class="gcard-back">${v.startsWith('http')?`<img src="${v}" alt="">`:`<div class="gemoji">${v}</div>`}</div>
       </div>
     </div>
   `).join('');
 
-  gameTimerInterval=setInterval(()=>{
-    gameTimer++;document.getElementById('gameTime').textContent=gameTimer+'s';
-  },1000);
+  gTimer=setInterval(()=>{gTime++;document.getElementById('gTime').textContent=gTime+'s'},1000);
 };
 
-window.flipCard=function(card){
-  if(!canFlip||card.classList.contains('flipped')||card.classList.contains('matched')) return;
-  if(flipped.length>=2) return;
-  card.classList.add('flipped');
-  flipped.push(card);
-  if(flipped.length===2){
-    gameAttempts++;
-    document.getElementById('gameAttempts').textContent=gameAttempts;
-    canFlip=false;
+window.gFlip=function(c){
+  if(!gCanFlip||c.classList.contains('flip')||c.classList.contains('matched')) return;
+  if(gFlipped.length>=2) return;
+  c.classList.add('flip');gFlipped.push(c);
+  if(gFlipped.length===2){
+    gAttempts++;document.getElementById('gAttempts').textContent=gAttempts;
+    gCanFlip=false;
     setTimeout(()=>{
-      if(flipped[0].dataset.value===flipped[1].dataset.value){
-        flipped.forEach(c=>{c.classList.add('matched')});
-        gameMatchCount++;
-        document.getElementById('gameMatches').textContent=gameMatchCount;
-        flipped=[];canFlip=true;
-        if(gameMatchCount===4){
-          clearInterval(gameTimerInterval);
-          setTimeout(()=>{
-            document.getElementById('gameGrid').style.display='none';
-            document.getElementById('gameResult').style.display='block';
-          },600);
-        }
+      if(gFlipped[0].dataset.v===gFlipped[1].dataset.v){
+        gFlipped.forEach(x=>x.classList.add('matched'));
+        gPairs++;document.getElementById('gPairs').textContent=gPairs;
+        gFlipped=[];gCanFlip=true;
+        if(gPairs===4){clearInterval(gTimer);setTimeout(()=>{document.getElementById('gameBoard').style.display='none';document.getElementById('gameWin').style.display='block'},600)}
       }else{
-        flipped.forEach(c=>c.classList.remove('flipped'));
-        flipped=[];canFlip=true;
+        gFlipped.forEach(x=>x.classList.remove('flip'));
+        gFlipped=[];gCanFlip=true;
       }
     },900);
   }
